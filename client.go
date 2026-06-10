@@ -135,9 +135,10 @@ func (c Client) BaseURL() *url.URL {
 
 func (c Client) isServerVersionAtLeast(targetVersion string) bool {
 	// semver requires versions to be prefixed with "v",
-	// and doesn't support "-SNAPSHOT" suffixes.
+	// and doesn't support "CP-...." suffixes.
 	targetVersionNormalized := fmt.Sprintf("v%s", targetVersion)
-	actualVersionNormalized := fmt.Sprintf("v%s", strings.TrimSuffix(c.about.Version, "-SNAPSHOT"))
+	actualVersion, _, _ := strings.Cut(c.about.Version, "CP-")
+	actualVersionNormalized := fmt.Sprintf("v%s", actualVersion)
 	return semver.Compare(targetVersionNormalized, actualVersionNormalized) <= 0
 }
 
